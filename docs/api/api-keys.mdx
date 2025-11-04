@@ -1,0 +1,111 @@
+---
+title: API Keys API
+description: Create and manage API keys
+---
+
+# API Keys API
+
+Manage your API keys programmatically.
+
+## List API Keys
+
+Get all your API keys (without showing the actual keys).
+
+<RequestExample>
+
+```bash
+curl https://api.frontier.com/v1/api-keys \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "keys": [
+    {
+      "id": "key_abc123",
+      "prefix": "sk-abc",
+      "last_four": "1234",
+      "description": "Production key",
+      "created_at": "2025-01-15T10:00:00Z",
+      "last_used_at": "2025-01-20T14:30:00Z",
+      "is_active": true
+    }
+  ]
+}
+```
+
+</ResponseExample>
+
+## Create API Key
+
+Generate a new API key.
+
+<RequestExample>
+
+```bash
+curl -X POST https://api.frontier.com/v1/api-keys \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "My training key"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "api_key": "sk-abc123def456...",
+  "key_id": "key_abc123",
+  "message": "API key created successfully"
+}
+```
+
+</ResponseExample>
+
+<Warning>
+  The API key is only shown once. Store it securely immediately!
+</Warning>
+
+## Revoke API Key
+
+Delete an API key.
+
+<RequestExample>
+
+```bash
+curl -X DELETE https://api.frontier.com/v1/api-keys/key_abc123 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "message": "API key revoked successfully"
+}
+```
+
+</ResponseExample>
+
+## Request Body
+
+### Create API Key
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `description` | string | No | Description for the key |
+
+## Rate Limits
+
+- Maximum 10 active keys per user
+- 5 key creations per hour
+- Keys never expire until revoked
+

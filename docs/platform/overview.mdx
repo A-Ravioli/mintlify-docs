@@ -1,0 +1,82 @@
+---
+title: Platform Overview
+description: Learn about the Frontier platform and its features
+---
+
+# Platform Overview
+
+Frontier provides a comprehensive platform for fine-tuning language models with an intuitive dashboard, API access, and robust infrastructure.
+
+## Core Features
+
+<CardGroup cols={2}>
+  <Card
+    title="Credit Management"
+    icon="credit-card"
+    href="/platform/credits-billing"
+  >
+    Purchase and manage credits for training runs
+  </Card>
+  <Card
+    title="API Keys"
+    icon="key"
+    href="/platform/api-keys"
+  >
+    Secure API access with key management
+  </Card>
+  <Card
+    title="Integrations"
+    icon="plug"
+    href="/platform/integrations"
+  >
+    Connect with WandB, Hugging Face, and Comet ML
+  </Card>
+  <Card
+    title="Training Runs"
+    icon="activity"
+    href="/platform/training-runs"
+  >
+    Monitor and manage your training jobs
+  </Card>
+</CardGroup>
+
+## Dashboard
+
+Access the Signal dashboard at `/signal` after logging in. The dashboard provides:
+
+- **Real-time Metrics**: View credit balance, active runs, and spending
+- **Quick Actions**: Create API keys, purchase credits, add integrations
+- **Run Monitoring**: Track all your training runs in one place
+- **History**: View past runs with detailed metrics and charts
+
+## Architecture
+
+```
+Frontend (Next.js)
+    ↓
+Backend API (Port 8001)
+    ↓
+Supabase Database
+    ↓
+Signal API (Port 8000)
+    ↓
+Modal GPUs (Compute)
+```
+
+## User Flow
+
+1. **Sign Up** → Create account and get initial access
+2. **Purchase Credits** → Buy credits via Stripe
+3. **Create API Key** → Generate keys for API access
+4. **Configure Integrations** → Add WandB, HuggingFace, etc.
+5. **Start Training** → Submit training jobs via API
+6. **Monitor Progress** → Track runs in real-time
+7. **Access Results** → Download checkpoints and metrics
+
+## Next Steps
+
+- Learn about [API Keys](/platform/api-keys)
+- Set up [Billing](/platform/credits-billing)
+- Configure [Integrations](/platform/integrations)
+- Monitor [Training Runs](/platform/training-runs)
+

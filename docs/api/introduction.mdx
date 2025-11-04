@@ -1,0 +1,77 @@
+---
+title: API Introduction
+description: Overview of the Frontier API
+---
+
+# API Reference
+
+The Frontier API provides programmatic access to all platform features. Use your API keys to interact with the API programmatically.
+
+## Authentication
+
+All API requests require authentication using an API key:
+
+```bash
+curl https://api.frontier.com/v1/credits \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+<Warning>
+  Keep your API keys secure. Never commit them to version control or share them publicly.
+</Warning>
+
+## Base URL
+
+```
+https://api.frontier.com/v1
+```
+
+For local development:
+```
+http://localhost:8001/v1
+```
+
+## Rate Limits
+
+- **Credit endpoints**: 10 requests per hour
+- **API key endpoints**: 5 requests per hour
+- **Run endpoints**: 100 requests per hour
+- **Integration endpoints**: 20 requests per hour
+
+## Response Format
+
+All responses are JSON:
+
+```json
+{
+  "data": { ... },
+  "message": "Success",
+  "status": "ok"
+}
+```
+
+## Error Handling
+
+Errors follow this format:
+
+```json
+{
+  "error": {
+    "code": "INSUFFICIENT_CREDITS",
+    "message": "Not enough credits to complete this operation",
+    "details": { ... }
+  }
+}
+```
+
+Common error codes:
+- `UNAUTHORIZED` - Invalid or missing API key
+- `INSUFFICIENT_CREDITS` - Not enough credits
+- `NOT_FOUND` - Resource doesn't exist
+- `VALIDATION_ERROR` - Invalid request parameters
+- `RATE_LIMIT_EXCEEDED` - Too many requests
+
+## SDKs
+
+Official SDKs coming soon. For now, use HTTP requests directly.
+

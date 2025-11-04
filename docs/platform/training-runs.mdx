@@ -1,0 +1,144 @@
+---
+title: Training Runs
+description: Monitor and manage your model training jobs
+---
+
+# Training Runs
+
+Track all your fine-tuning jobs in real-time with comprehensive monitoring and detailed metrics.
+
+## Viewing Runs
+
+Navigate to `/signal/runs` or `/signal/monitors` to see:
+- All your training runs
+- Current status (Running, Completed, Failed)
+- Progress and metrics
+- Cost per run
+
+## Run Status
+
+Runs can have the following statuses:
+
+<AccordionGroup>
+  <Accordion title="Queued">
+    Run is waiting to start. It will begin when resources are available.
+  </Accordion>
+  <Accordion title="Running">
+    Training is in progress. Monitor metrics in real-time.
+  </Accordion>
+  <Accordion title="Completed">
+    Training finished successfully. Download checkpoints and view results.
+  </Accordion>
+  <Accordion title="Failed">
+    Training encountered an error. Check logs for details.
+  </Accordion>
+  <Accordion title="Cancelled">
+    Run was manually cancelled or timed out.
+  </Accordion>
+</AccordionGroup>
+
+## Monitoring Runs
+
+### Live Monitoring
+
+The Live Monitors page (`/signal/monitors`) provides:
+- Real-time updates (auto-refresh every 10 seconds)
+- Filter by status (All, Running, Completed, Failed)
+- Manual refresh button
+- Progress indicators
+
+### Run Details
+
+Click on any run to see:
+- **Overview**: Base model, status, duration, cost
+- **Metrics**: Loss, learning rate, GPU utilization
+- **Charts**: Visual progress of training metrics
+- **Config**: Hyperparameters and training configuration
+- **Logs**: Training output and error messages
+
+## Metrics
+
+Each run tracks:
+
+- **Loss**: Training and validation loss
+- **Learning Rate**: Current learning rate
+- **GPU Utilization**: GPU usage percentage
+- **Throughput**: Tokens/second processed
+- **Cost**: Real-time cost tracking
+
+## Creating Runs
+
+### Via API
+
+```bash
+curl -X POST https://api.frontier.com/v1/runs \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "base_model": "meta-llama/Llama-3.2-1B",
+    "training_data": "s3://your-bucket/training-data.jsonl",
+    "config": {
+      "learning_rate": 0.0001,
+      "batch_size": 4,
+      "num_epochs": 3
+    }
+  }'
+```
+
+### Required Parameters
+
+- `base_model`: The base model to fine-tune
+- `training_data`: URL to your training dataset
+
+### Optional Parameters
+
+- `config`: Training hyperparameters
+- `integration_ids`: IDs of integrations to use
+
+## Checkpoints
+
+After training completes:
+
+1. Navigate to `/signal/checkpoints`
+2. Find your completed run
+3. Download checkpoints
+4. View run metadata
+
+<Note>
+  Checkpoints are available for completed runs only. Make sure training finished successfully.
+</Note>
+
+## Cost Tracking
+
+Each run shows:
+- Estimated cost before starting
+- Real-time cost during training
+- Final cost after completion
+
+Costs are based on:
+- GPU type used
+- Training duration
+- Model size
+
+## Troubleshooting
+
+### Run stuck in "Queued"
+- Check your credit balance
+- Verify you have sufficient credits
+- Check system availability
+
+### Run failed immediately
+- Review run logs for error messages
+- Verify training data format is correct
+- Check API key is valid
+
+### Metrics not updating
+- Refresh the page
+- Check your internet connection
+- Verify the run is still active
+
+### Can't download checkpoints
+- Ensure run completed successfully
+- Check file permissions
+- Verify checkpoint generation completed
+

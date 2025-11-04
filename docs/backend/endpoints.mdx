@@ -1,0 +1,182 @@
+---
+title: Backend API Endpoints
+description: Complete API endpoint reference
+---
+
+# Backend API Endpoints
+
+Complete reference for all backend API endpoints.
+
+## Credits Management
+
+### `GET /credits`
+
+Get user's credit balance.
+
+**Auth**: JWT token required
+
+**Response**:
+```json
+{
+  "credits_balance": 100.50,
+  "total_spent": 25.00,
+  "modal_spend": 25.00
+}
+```
+
+### `POST /credits/validate`
+
+Validate user has sufficient credits.
+
+**Auth**: JWT token required
+
+**Request**:
+```json
+{
+  "estimated_cost": 5.50
+}
+```
+
+**Response**:
+```json
+{
+  "valid": true,
+  "credits_balance": 100.50,
+  "estimated_cost": 5.50,
+  "message": "Sufficient credits available"
+}
+```
+
+### `POST /credits/deduct`
+
+Deduct credits (called after job completion).
+
+**Auth**: JWT token required
+
+**Request**:
+```json
+{
+  "amount": 5.50,
+  "run_id": "run_abc123",
+  "metadata": {}
+}
+```
+
+## API Key Management
+
+### `POST /api-keys`
+
+Create a new API key.
+
+**Auth**: JWT token required
+
+**Rate Limit**: 5 per hour
+
+**Request**:
+```json
+{
+  "description": "My training key"
+}
+```
+
+**Response**:
+```json
+{
+  "api_key": "sk-abc123...",
+  "message": "API key created successfully"
+}
+```
+
+### `GET /api-keys`
+
+List user's API keys (without showing actual keys).
+
+**Auth**: JWT token required
+
+### `DELETE /api-keys/{key_id}`
+
+Revoke an API key.
+
+**Auth**: JWT token required
+
+## Integration Management
+
+### `GET /integrations`
+
+List user's integrations.
+
+**Auth**: JWT token required
+
+### `POST /integrations`
+
+Add or update an integration.
+
+**Auth**: JWT token required
+
+**Request**:
+```json
+{
+  "integration_type": "wandb",
+  "api_key": "your_wandb_key"
+}
+```
+
+### `DELETE /integrations/{integration_id}`
+
+Delete an integration.
+
+**Auth**: JWT token required
+
+## Stripe Payments
+
+### `POST /stripe/checkout`
+
+Create checkout session for credit purchase.
+
+**Auth**: JWT token required
+
+**Rate Limit**: 10 per hour
+
+**Request**:
+```json
+{
+  "amount": 50.00
+}
+```
+
+**Response**:
+```json
+{
+  "session_id": "cs_test_...",
+  "checkout_url": "https://checkout.stripe.com/..."
+}
+```
+
+### `POST /stripe/webhook`
+
+Stripe webhook endpoint (no auth, verified by signature).
+
+<Note>
+  Configure this URL in your Stripe dashboard.
+</Note>
+
+## Usage Tracking (Internal)
+
+### `POST /usage/track`
+
+Track usage from Signal API and deduct credits.
+
+**Auth**: Internal secret required
+
+**Request**:
+```json
+{
+  "internal_secret": "your_shared_secret",
+  "user_id": "user_uuid",
+  "run_id": "run_abc123",
+  "gpu_type": "l40s",
+  "elapsed_seconds": 3600,
+  "cost": 5.40
+}
+```
+

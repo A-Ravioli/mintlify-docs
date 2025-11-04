@@ -1,0 +1,62 @@
+---
+title: Stripe Integration
+description: Payment processing and webhooks
+---
+
+# Stripe Integration
+
+Frontier uses Stripe for secure payment processing.
+
+## Checkout Session
+
+The checkout session is created automatically when you purchase credits through the API. See the [Credits API](/api/credits) for details.
+
+## Webhooks
+
+Frontier listens for Stripe webhook events to automatically update credit balances.
+
+### Webhook Events
+
+- `checkout.session.completed` - Credits are added after successful payment
+
+### Webhook Configuration
+
+1. Go to Stripe Dashboard > Developers > Webhooks
+2. Add endpoint: `https://your-domain.com/api/stripe/webhook`
+3. Select events: `checkout.session.completed`
+4. Copy the signing secret to `STRIPE_WEBHOOK_SECRET`
+
+### Local Testing
+
+Use Stripe CLI to forward webhooks locally:
+
+```bash
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
+
+Use the webhook signing secret from CLI output.
+
+<Info>
+  Webhook signatures are verified automatically. Invalid signatures are rejected.
+</Info>
+
+## Test Cards
+
+For testing, use these test cards:
+
+| Card Number | Description |
+|-------------|-------------|
+| `4242 4242 4242 4242` | Success |
+| `4000 0000 0000 0002` | Decline |
+| `4000 0025 0000 3155` | 3D Secure |
+
+Use any future expiry date and any CVC.
+
+## Production
+
+For production:
+- Use live Stripe keys
+- Configure webhook endpoint with production URL
+- Enable signature verification
+- Monitor webhook events in Stripe dashboard
+

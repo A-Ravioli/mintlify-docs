@@ -1,0 +1,113 @@
+---
+title: Credits & Billing
+description: Purchase and manage credits for training runs
+---
+
+# Credits & Billing
+
+Frontier uses a credit-based billing system. Purchase credits to pay for training runs and other platform usage.
+
+## Purchasing Credits
+
+1. Navigate to `/signal/billing`
+2. Select a credit package:
+   - **$50** - 50 credits + 5 bonus credits
+   - **$100** - 100 credits + 15 bonus credits
+   - **$250** - 250 credits + 50 bonus credits
+   - **$500** - 500 credits + 150 bonus credits
+3. Click "Purchase"
+4. Complete Stripe Checkout
+5. Credits are added automatically after payment
+
+<Note>
+  Bonus credits are included with each purchase. The more you buy, the more bonus credits you get!
+</Note>
+
+## Credit Packages
+
+| Package | Credits | Bonus | Total Credits |
+|---------|---------|-------|---------------|
+| Starter | 50 | 5 | 55 |
+| Professional | 100 | 15 | 115 |
+| Business | 250 | 50 | 300 |
+| Enterprise | 500 | 150 | 650 |
+
+## Viewing Your Balance
+
+Check your credit balance at:
+- Dashboard (`/signal`) - Shows current balance
+- Billing page (`/signal/billing`) - Detailed balance and transaction history
+
+## Transaction History
+
+View all your credit purchases and spending:
+- Transaction date
+- Amount purchased
+- Payment status
+- Credit balance after transaction
+
+## Auto-Recharge
+
+Set up automatic credit purchases when your balance gets low:
+
+1. Navigate to `/signal/billing`
+2. Click "Set up Auto-Recharge"
+3. Choose a threshold (e.g., when balance < $10)
+4. Select an amount to purchase automatically
+5. Enable auto-recharge
+
+<Info>
+  Auto-recharge ensures you never run out of credits. You can disable it at any time.
+</Info>
+
+## Credit Usage
+
+Credits are automatically deducted when you:
+- Start a training run
+- Use compute resources
+- Access premium features
+
+## Pricing
+
+Training costs vary based on:
+- Model size
+- Training duration
+- GPU type used
+- Dataset size
+
+See your run details for exact costs per training job.
+
+## Payment Methods
+
+Frontier accepts:
+- Credit cards (Visa, Mastercard, Amex)
+- Debit cards
+- All payments processed securely through Stripe
+
+<Warning>
+  All charges are in USD. International cards are accepted.
+</Warning>
+
+## Refunds
+
+- Credits are non-refundable once purchased
+- Unused credits remain in your account indefinitely
+- Contact support for billing issues
+
+## Troubleshooting
+
+### Credits not updating after payment
+- Check Stripe webhook configuration
+- Verify payment was successful in Stripe dashboard
+- Refresh your browser and check balance again
+
+### Payment failed
+- Verify your card details are correct
+- Check your card has sufficient funds
+- Try a different payment method
+
+### Missing transaction
+- Check transaction history
+- Verify webhook is configured correctly
+- Contact support with transaction ID
+

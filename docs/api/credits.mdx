@@ -1,0 +1,107 @@
+---
+title: Credits API
+description: Manage credits and check balances
+---
+
+# Credits API
+
+Manage your credit balance and purchase credits programmatically.
+
+## Get Credit Balance
+
+Get your current credit balance.
+
+<RequestExample>
+
+```bash
+curl https://api.frontier.com/v1/credits \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "credits_balance": 100.50,
+  "total_spent": 25.00,
+  "modal_spend": 25.00
+}
+```
+
+</ResponseExample>
+
+## Validate Credits
+
+Check if you have sufficient credits for an operation.
+
+<RequestExample>
+
+```bash
+curl -X POST https://api.frontier.com/v1/credits/validate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "estimated_cost": 5.50
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "valid": true,
+  "credits_balance": 100.50,
+  "estimated_cost": 5.50,
+  "message": "Sufficient credits available"
+}
+```
+
+</ResponseExample>
+
+## Initiate Credit Purchase
+
+Start a Stripe checkout session to purchase credits.
+
+<RequestExample>
+
+```bash
+curl -X POST https://api.frontier.com/v1/credits/purchase \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 50.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "session_id": "cs_test_...",
+  "checkout_url": "https://checkout.stripe.com/..."
+}
+```
+
+</ResponseExample>
+
+## Query Parameters
+
+### Get Credit Balance
+No parameters required.
+
+### Validate Credits
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `estimated_cost` | number | Yes | Estimated cost of operation |
+
+### Purchase Credits
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `amount` | number | Yes | Amount to purchase (in USD) |
+

@@ -1,0 +1,158 @@
+---
+title: Signal Platform Setup
+description: Complete setup guide for the Signal fine-tuning platform
+---
+
+# Signal Platform Setup
+
+This guide will help you set up the Signal fine-tuning platform with Stripe integration and Supabase backend.
+
+## Prerequisites
+
+- Supabase project with auth enabled
+- Stripe account (test mode for development)
+- Node.js and pnpm installed
+- Database migrations completed (see [Database Setup](/setup/database))
+
+## 1. Database Migration
+
+Make sure you've run the Signal migration to create the necessary database tables. See the [Database Setup Guide](/setup/database) for instructions.
+
+The migration creates:
+- `user_credits` - Tracks user credit balances and spending
+- `api_keys` - Stores hashed API keys for authentication
+- `user_integrations` - Stores encrypted third-party API keys
+- `credit_purchases` - Records Stripe transactions
+- `runs` - Training run configurations
+- `run_metrics` - Training metrics and progress
+
+## 2. Environment Variables
+
+Add your credentials to `.env.local`:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_key_here
+STRIPE_SECRET_KEY=sk_test_your_secret_key_here
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+```
+
+## 3. Stripe Setup
+
+### Configure Webhook
+
+1. Go to Stripe Dashboard > Developers > Webhooks
+2. Add endpoint: `https://your-domain.com/api/stripe/webhook`
+3. Select events to listen for:
+   - `checkout.session.completed`
+4. Copy the signing secret to `STRIPE_WEBHOOK_SECRET`
+
+### Local Testing with Stripe CLI
+
+```bash
+# Install Stripe CLI
+brew install stripe/stripe-cli/stripe
+
+# Login
+stripe login
+
+# Forward webhooks to local endpoint
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+
+# Use the webhook signing secret from CLI output in your .env.local
+```
+
+## 4. Features Overview
+
+### Credits Management
+- Users start with $0.00 balance
+- Can purchase credits via Stripe Checkout
+- Credits are added automatically after successful payment
+- Track total spent and compute usage
+
+### API Keys
+- Generate cryptographically secure API keys
+- Keys are hashed (SHA-256) before storage
+- Display only prefix and last 4 characters for security
+- Keys are validated against user credit balance
+
+### Integrations
+- Connect external services (WandB, HuggingFace, Comet ML)
+- API keys are encrypted before storage
+- Can add/remove integrations
+
+## 5. Testing the Flow
+
+### Complete User Journey
+
+1. **Sign Up**: Create a new account at `/signup`
+2. **Redirect**: Should redirect to `/signal` after signup
+3. **View Credits**: See $0.00 balance on dashboard
+4. **Buy Credits**: 
+   - Select a package ($50, $100, $250, $500)
+   - Click "Purchase"
+   - Complete Stripe Checkout (use test card: 4242 4242 4242 4242)
+5. **Verify Payment**: Return to `/signal?success=true`
+6. **Check Balance**: Credits should be updated
+7. **Create API Key**:
+   - Enter a name
+   - Click "Create"
+   - Copy the key (shown only once)
+
+### Test Cards (Stripe)
+
+```
+Success: 4242 4242 4242 4242
+Decline: 4000 0000 0000 0002
+3D Secure: 4000 0025 0000 3155
+```
+
+## 6. Security Notes
+
+### Production Checklist
+
+- [ ] Use proper encryption for `user_integrations.api_key_encrypted`
+- [ ] Implement rate limiting on API endpoints
+- [ ] Add API key usage tracking
+- [ ] Set up monitoring for suspicious activity
+- [ ] Enable Stripe webhook signature verification
+- [ ] Use environment-specific Stripe keys (test vs. live)
+- [ ] Implement credit deduction on API usage
+- [ ] Add spending limits and alerts
+
+### API Key Security
+
+The current implementation:
+- Generates 32-byte random keys
+- Hashes keys using SHA-256
+- Never stores plaintext keys
+- Shows keys only once during creation
+
+For production, consider:
+- Adding key scopes/permissions
+- Implementing key rotation
+- Adding IP allowlisting
+- Rate limiting per key
+
+## Troubleshooting
+
+### Credits not updating after payment
+- Check webhook is configured correctly
+- Verify webhook secret matches
+- Check Stripe webhook logs for errors
+- Look at Supabase logs for database errors
+
+### API keys not working
+- Verify RLS policies are correct
+- Check user is authenticated
+- Ensure key is active (`is_active = true`)
+
+### Integration keys not saving
+- Check encryption is working
+- Verify RLS policies allow INSERT
+- Consider implementing proper encryption
+

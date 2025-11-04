@@ -1,0 +1,133 @@
+---
+title: Integrations
+description: Connect external services like WandB, Hugging Face, and Comet ML
+---
+
+# Integrations
+
+Connect external services to enhance your training workflow. Frontier supports integrations with popular ML tools.
+
+## Supported Integrations
+
+<CardGroup cols={3}>
+  <Card
+    title="Weights & Biases"
+    icon="wand-magic-sparkles"
+  >
+    Track experiments and visualize training metrics
+  </Card>
+  <Card
+    title="Hugging Face"
+    icon="cloud"
+  >
+    Upload models and datasets to Hugging Face Hub
+  </Card>
+  <Card
+    title="Comet ML"
+    icon="flask"
+  >
+    Experiment tracking and model management
+  </Card>
+</CardGroup>
+
+## Adding an Integration
+
+1. Navigate to `/signal/integrations`
+2. Select the integration type
+3. Enter your API key from the service
+4. Click "Add Integration"
+
+<Info>
+  Your API keys are encrypted before storage. Only you can access them.
+</Info>
+
+## Weights & Biases (WandB)
+
+### Getting Your API Key
+
+1. Go to [wandb.ai](https://wandb.ai)
+2. Log in to your account
+3. Navigate to Settings → API Keys
+4. Copy your API key
+
+### Usage
+
+When you create a training run with a WandB integration:
+- Metrics are automatically logged to WandB
+- Training runs appear in your WandB dashboard
+- You can compare runs and track experiments
+
+## Hugging Face
+
+### Getting Your API Key
+
+1. Go to [huggingface.co](https://huggingface.co)
+2. Log in to your account
+3. Go to Settings → Access Tokens
+4. Create a new token with "write" permissions
+5. Copy the token
+
+### Usage
+
+- Models can be uploaded to Hugging Face Hub after training
+- Datasets can be accessed from Hugging Face
+- Model cards are automatically generated
+
+## Comet ML
+
+### Getting Your API Key
+
+1. Go to [comet.ml](https://comet.ml)
+2. Log in to your account
+3. Go to Settings → API Keys
+4. Copy your API key
+
+### Usage
+
+- Training metrics are tracked in Comet ML
+- Compare experiments across runs
+- Model registry integration
+
+## Managing Integrations
+
+### Viewing Integrations
+
+See all your connected integrations at `/signal/integrations`:
+- Integration type
+- Connection status
+- Last used timestamp
+
+### Removing an Integration
+
+1. Find the integration you want to remove
+2. Click "Remove"
+3. Confirm the action
+
+<Warning>
+  Removing an integration will stop automatic logging for future runs. Past runs are unaffected.
+</Warning>
+
+## Security
+
+- All API keys are encrypted before storage
+- Keys are only accessible by you
+- Keys are never exposed in API responses
+- You can revoke access at any time
+
+## Troubleshooting
+
+### Integration not working
+- Verify your API key is correct
+- Check the key has proper permissions
+- Ensure the service is accessible from our servers
+
+### Metrics not appearing
+- Verify the integration is active
+- Check your API key hasn't expired
+- Review service-specific requirements
+
+### Key expired
+- Generate a new API key from the service
+- Update the integration with the new key
+- Remove the old integration first
+

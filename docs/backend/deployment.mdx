@@ -1,0 +1,119 @@
+---
+title: Backend Deployment
+description: Deploy the Frontier backend service
+---
+
+# Backend Deployment
+
+Deploy the Frontier Backend API to production.
+
+## Prerequisites
+
+- Python 3.12+
+- Supabase project with service role key
+- Stripe account with API keys
+- PostgreSQL database (via Supabase)
+
+## Environment Variables
+
+```bash
+# Supabase (service role key for full database access)
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Stripe
+STRIPE_SECRET_KEY=sk_test_your_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+
+# Signal API Integration
+SIGNAL_API_URL=http://localhost:8000
+SIGNAL_INTERNAL_SECRET=generate_a_secure_random_string
+
+# Server Config
+ENVIRONMENT=production
+PORT=8001
+LOG_LEVEL=INFO
+ENABLE_RATE_LIMITING=true
+
+# CORS
+ALLOWED_ORIGINS=https://your-frontend.com
+FRONTEND_URL=https://your-frontend.com
+```
+
+## Installation
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your credentials
+```
+
+## Running the Server
+
+### Development
+
+```bash
+python main.py
+
+# Or with uvicorn
+uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+```
+
+### Production
+
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8001 --workers 4
+```
+
+## Deployment Platforms
+
+### Railway
+
+```toml
+# Railway.toml
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT"
+healthcheckPath = "/health"
+```
+
+### Docker
+
+```dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
+```
+
+## Monitoring
+
+Key metrics to monitor:
+
+- Credit deduction errors
+- Stripe webhook failures
+- API key generation rate
+- Failed authentication attempts
+- Average credit consumption per user
+
+## Security Checklist
+
+- [ ] Use service role key only in backend
+- [ ] Enable HTTPS only
+- [ ] Rotate `SIGNAL_INTERNAL_SECRET` periodically
+- [ ] Enable rate limiting
+- [ ] Monitor webhook failures
+- [ ] Set up alerts for unusual activity
+- [ ] Use environment-specific keys (test vs. live)
+

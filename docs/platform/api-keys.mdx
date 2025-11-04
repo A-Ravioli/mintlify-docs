@@ -1,0 +1,88 @@
+---
+title: API Keys
+description: Manage your API keys for programmatic access
+---
+
+# API Keys
+
+API keys provide secure access to the Frontier API. This guide covers creating, managing, and using API keys.
+
+## Creating API Keys
+
+1. Navigate to `/signal/api-keys`
+2. Enter a description for your key
+3. Click "Create API Key"
+4. **Copy the key immediately** - it's only shown once!
+
+<Warning>
+  API keys are only displayed once upon creation. Make sure to copy and store them securely!
+</Warning>
+
+## Key Security
+
+- Keys are generated using cryptographically secure random generation
+- Keys are hashed (SHA-256) before storage in the database
+- Only the prefix and last 4 characters are displayed for existing keys
+- Keys are validated against your credit balance before use
+
+## Managing Keys
+
+### Viewing Keys
+
+You can see all your API keys at `/signal/api-keys`:
+- Key prefix (e.g., `sk-...`)
+- Last 4 characters
+- Creation date
+- Last used timestamp
+- Active status
+
+### Revoking Keys
+
+1. Find the key you want to revoke
+2. Click the "Revoke" button
+3. Confirm the action
+
+<Info>
+  Revoked keys cannot be restored. You'll need to create a new key if needed.
+</Info>
+
+## Using API Keys
+
+Include your API key in the `Authorization` header:
+
+```bash
+curl https://api.frontier.com/v1/runs \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+## Best Practices
+
+- **One key per application**: Create separate keys for different apps
+- **Rotate regularly**: Revoke old keys and create new ones periodically
+- **Store securely**: Never commit keys to version control
+- **Monitor usage**: Check your dashboard regularly for unusual activity
+- **Use environment variables**: Store keys in `.env` files, not in code
+
+## Key Limits
+
+- Maximum 10 active keys per user
+- Rate limit: 5 key creations per hour
+- Keys never expire (until revoked)
+
+## Troubleshooting
+
+### "Invalid API key" error
+- Verify the key is copied correctly (no extra spaces)
+- Check that the key hasn't been revoked
+- Ensure the key is active in your dashboard
+
+### "Insufficient credits" error
+- Purchase credits to continue using the API
+- Check your balance at `/signal/billing`
+
+### Key not working
+- Verify you're using the full key (not just the prefix)
+- Check the key is active in your dashboard
+- Ensure your account is in good standing
+

@@ -1,0 +1,134 @@
+---
+title: Database Setup
+description: Set up your Supabase database for Frontier
+---
+
+# Database Setup
+
+This guide will help you set up the database for Frontier using Supabase.
+
+## Quick Setup
+
+The database needs to be set up before Frontier can work properly.
+
+### Option 1: Via Supabase Dashboard (Recommended)
+
+1. **Open your Supabase project**:
+   - Go to your Supabase project dashboard
+
+2. **Navigate to SQL Editor**:
+   - Click on "SQL Editor" in the left sidebar
+   - Click "New query"
+
+3. **Copy and run the migration**:
+   - Open the file: `frontend/supabase/ALL_MIGRATIONS_COMBINED.sql`
+   - Copy ALL the contents
+   - Paste into the SQL Editor
+   - Click "Run" or press `Cmd/Ctrl + Enter`
+
+4. **Verify tables were created**:
+   - Go to "Table Editor" in the sidebar
+   - You should see the following tables:
+     - `user_credits`
+     - `api_keys`
+     - `user_integrations`
+     - `credit_purchases`
+     - `runs`
+     - `run_metrics`
+
+### Option 2: Via Command Line
+
+If you have Supabase CLI installed:
+
+```bash
+# Make sure you're logged in
+supabase login
+
+# Link your project
+supabase link --project-ref YOUR_PROJECT_REF
+
+# Run the migration
+supabase db push
+```
+
+## Database Schema
+
+The migration creates the following tables:
+
+<AccordionGroup>
+  <Accordion title="user_credits">
+    Tracks user credit balances and spending
+    - `credits_balance` - Current available credits
+    - `total_spent` - Lifetime spending
+    - `modal_spend` - Spending on compute
+  </Accordion>
+
+  <Accordion title="api_keys">
+    Stores hashed API keys for authentication
+    - `key_hash` - SHA-256 hashed key
+    - `key_prefix` - Display prefix (e.g., "sk-...")
+    - `is_active` - Enable/disable keys
+  </Accordion>
+
+  <Accordion title="user_integrations">
+    Stores encrypted third-party API keys (WandB, HuggingFace, etc.)
+    - `integration_type` - Service name
+    - `api_key_encrypted` - Encrypted API key
+  </Accordion>
+
+  <Accordion title="credit_purchases">
+    Records Stripe transactions
+    - `stripe_session_id` - Stripe checkout session
+    - `credits_purchased` - Amount of credits bought
+    - `status` - Payment status
+  </Accordion>
+
+  <Accordion title="runs">
+    Training run configurations
+    - `base_model` - Model being fine-tuned
+    - `status` - Current run status
+    - `config` - Training hyperparameters (JSONB)
+  </Accordion>
+
+  <Accordion title="run_metrics">
+    Time-series training data
+    - `loss`, `learning_rate`, `gpu_utilization`
+    - `throughput`, `cost_so_far`
+  </Accordion>
+</AccordionGroup>
+
+## Security
+
+- Row Level Security (RLS) is enabled on all tables
+- Users can only access their own data
+- Cascading deletes are configured appropriately
+
+## Troubleshooting
+
+### Error: "relation does not exist"
+- You haven't run the migration yet
+- Follow Option 1 above
+
+### Error: "permission denied for table"
+- RLS policies may not be set up correctly
+- Re-run the migration
+- Make sure you're logged in (check auth state)
+
+### Error: "foreign key constraint"
+- User is not authenticated
+- Check that `auth.uid()` is returning a value
+- Sign out and sign back in
+
+## Verify Setup
+
+Run this query in Supabase SQL Editor to verify:
+
+```sql
+SELECT 
+  (SELECT COUNT(*) FROM user_credits) as credits_count,
+  (SELECT COUNT(*) FROM api_keys) as keys_count,
+  (SELECT COUNT(*) FROM user_integrations) as integrations_count;
+```
+
+All queries should return successfully (even if count is 0).
+

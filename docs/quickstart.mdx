@@ -1,0 +1,56 @@
+---
+title: Quickstart
+description: Fast track guide to using Frontier
+---
+
+# Quickstart
+
+Get Frontier running and make your first API call in 5 minutes.
+
+## 1. Sign Up
+
+Create your account at `/signup` or through the API.
+
+## 2. Get API Key
+
+After logging in, navigate to `/signal/api-keys` and create your first API key.
+
+<Warning>
+  Copy your API key immediately - it's only shown once!
+</Warning>
+
+## 3. Purchase Credits
+
+Buy credits to start training models:
+
+- Navigate to `/signal/billing`
+- Select a credit package
+- Complete Stripe checkout
+
+## 4. Create Your First Training Run
+
+Use your API key to create a training run:
+
+```bash
+curl -X POST https://api.frontier.com/v1/runs \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "base_model": "meta-llama/Llama-3.2-1B",
+    "training_data": "your-training-data-url"
+  }'
+```
+
+## 5. Monitor Your Run
+
+View your training runs at `/signal/runs` or via the API:
+
+```bash
+curl https://api.frontier.com/v1/runs \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## That's It!
+
+You're now ready to fine-tune models with Frontier. Check out the [API Reference](/api/introduction) for more details.
+

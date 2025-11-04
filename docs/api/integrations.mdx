@@ -1,0 +1,111 @@
+---
+title: Integrations API
+description: Manage external service integrations
+---
+
+# Integrations API
+
+Connect and manage integrations with external services.
+
+## List Integrations
+
+Get all your integrations.
+
+<RequestExample>
+
+```bash
+curl https://api.frontier.com/v1/integrations \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "integrations": [
+    {
+      "id": "integration_123",
+      "type": "wandb",
+      "status": "active",
+      "created_at": "2025-01-15T10:00:00Z",
+      "last_used_at": "2025-01-20T14:30:00Z"
+    }
+  ]
+}
+```
+
+</ResponseExample>
+
+## Add Integration
+
+Connect a new external service.
+
+<RequestExample>
+
+```bash
+curl -X POST https://api.frontier.com/v1/integrations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "integration_type": "wandb",
+    "api_key": "your_wandb_api_key"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "id": "integration_123",
+  "type": "wandb",
+  "message": "Integration added successfully"
+}
+```
+
+</ResponseExample>
+
+## Remove Integration
+
+Delete an integration.
+
+<RequestExample>
+
+```bash
+curl -X DELETE https://api.frontier.com/v1/integrations/integration_123 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json
+{
+  "message": "Integration removed successfully"
+}
+```
+
+</ResponseExample>
+
+## Supported Integration Types
+
+- `wandb` - Weights & Biases
+- `huggingface` - Hugging Face
+- `comet` - Comet ML
+
+## Request Body
+
+### Add Integration
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `integration_type` | string | Yes | Type of integration |
+| `api_key` | string | Yes | API key from the service |
+
+<Warning>
+  API keys are encrypted before storage. Never share your integration API keys.
+</Warning>
+

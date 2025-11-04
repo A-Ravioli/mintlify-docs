@@ -1,0 +1,77 @@
+---
+title: Getting Started
+description: Get Frontier up and running in minutes
+---
+
+# Getting Started
+
+Get Frontier running in minutes with this quick start guide.
+
+## Prerequisites
+
+- Node.js 18+ installed
+- pnpm (or npm) package manager
+- Supabase account (free tier works)
+- Stripe account (for payments)
+
+## Installation
+
+### 1. Install Dependencies
+
+```bash
+cd frontend
+pnpm install
+```
+
+### 2. Set Up Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Add your credentials to `.env.local`:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
+# Stripe
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+### 3. Set Up Database
+
+Run the database migration in your Supabase SQL Editor:
+
+```bash
+# Copy the contents of frontend/supabase/ALL_MIGRATIONS_COMBINED.sql
+# Paste into Supabase Dashboard > SQL Editor
+# Click "Run"
+```
+
+See the [Database Setup Guide](/setup/database) for detailed instructions.
+
+### 4. Run Development Server
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see your app.
+
+## Next Steps
+
+- Configure [authentication](/setup/authentication)
+- Set up [Signal platform](/setup/signal)
+- Learn about [API keys](/platform/api-keys)
+- Explore the [API reference](/api/introduction)
+
+<Note>
+  For detailed setup instructions, check out our setup guides in the navigation menu.
+</Note>
+

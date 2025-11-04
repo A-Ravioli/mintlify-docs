@@ -1,0 +1,73 @@
+---
+title: Backend API Overview
+description: Private backend service for billing and credits management
+---
+
+# Backend API Overview
+
+The Frontier Backend is a private service that handles sensitive operations like billing, credits management, API key generation, and Stripe integration.
+
+<Warning>
+  This service should NOT be open-sourced - it contains sensitive billing logic and manages user payments.
+</Warning>
+
+## Architecture
+
+```
+┌─────────────────┐      ┌──────────────────┐      ┌─────────────┐
+│  Frontend App   │─────▶│  Backend API     │─────▶│  Supabase   │
+│  (Next.js)      │      │  (Port 8001)     │      │  Database   │
+└─────────────────┘      └──────────────────┘      └─────────────┘
+                                │
+                                │ Internal API
+                                ▼
+                         ┌──────────────────┐
+                         │   Signal API     │
+                         │   (Port 8000)    │
+                         └──────────────────┘
+                                │
+                                ▼
+                         ┌──────────────────┐
+                         │   Modal GPUs      │
+                         └──────────────────┘
+```
+
+## What It Does
+
+- **Credit Management**: Track user balances, validate sufficient funds, deduct credits
+- **API Key Management**: Generate, list, and revoke API keys for Signal API access
+- **Payment Processing**: Stripe integration for credit purchases
+- **Integration Storage**: Securely store user API keys for WandB, HuggingFace, etc.
+- **Usage Tracking**: Receive usage reports from Signal API and deduct credits
+
+## Setup
+
+See the [Backend Setup Guide](/backend/deployment) for installation and configuration.
+
+## Endpoints
+
+- [Credits Endpoints](/backend/endpoints#credits-management)
+- [API Key Endpoints](/backend/endpoints#api-key-management)
+- [Integration Endpoints](/backend/endpoints#integration-management)
+- [Stripe Endpoints](/backend/endpoints#stripe-payments)
+
+## Security
+
+### Protected Operations
+
+- ✅ Service role key for Supabase (full database access)
+- ✅ Stripe secret keys and webhook secrets
+- ✅ Credit balance manipulation
+- ✅ API key generation (plaintext keys shown once)
+- ✅ User payment information
+
+### Best Practices
+
+1. **Never commit `.env`** to version control
+2. **Use service role key** only in this backend (never in Signal API)
+3. **Rotate `SIGNAL_INTERNAL_SECRET`** periodically
+4. **Enable rate limiting** in production
+5. **Use HTTPS only** in production
+6. **Monitor webhook failures** from Stripe
+7. **Set up alerts** for unusual credit deductions
+

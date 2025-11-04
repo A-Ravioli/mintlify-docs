@@ -1,0 +1,121 @@
+---
+title: Authentication Setup
+description: Configure Supabase authentication for Frontier
+---
+
+# Authentication Setup
+
+This guide will help you set up Supabase authentication for your Frontier application.
+
+## Prerequisites
+
+- A Supabase account (sign up at [https://supabase.com](https://supabase.com))
+- A Supabase project created
+
+## Step 1: Get Your API Credentials
+
+1. Go to your Supabase project dashboard
+2. Navigate to **Settings** → **API**
+3. Copy the following values:
+   - **Project URL**: Your unique Supabase URL
+   - **anon/public key**: Your anonymous public key
+
+## Step 2: Configure Environment Variables
+
+Add your credentials to `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+<Warning>
+  Never commit your `.env.local` file to version control!
+</Warning>
+
+## Step 3: Configure Email Authentication
+
+For development, you may want to disable email confirmation:
+
+1. Go to **Authentication** → **Providers** → **Email**
+2. Under "Email Settings":
+   - Toggle **Enable email confirmations** OFF for development
+   - Toggle **Secure email change** OFF for development
+
+<Note>
+  For production, keep these enabled for security.
+</Note>
+
+## Step 4: Configure Site URL and Redirect URLs
+
+1. Go to **Authentication** → **URL Configuration**
+2. Set the following:
+   - **Site URL**: `http://localhost:3000` (for development)
+   - **Redirect URLs**: Add:
+     - `http://localhost:3000/`
+     - `http://localhost:3000/signal`
+     - `http://localhost:3000/login`
+
+<Note>
+  For production, add your production URLs as well.
+</Note>
+
+## Step 5: Test Your Setup
+
+1. Start your development server:
+   ```bash
+   pnpm dev
+   ```
+
+2. Navigate to `http://localhost:3000`
+
+3. Test the authentication flow:
+   - Go to `/signup`
+   - Enter an email and password (minimum 6 characters)
+   - Click "Create account"
+   - You should be redirected to the Signal dashboard
+
+## Features
+
+### ✅ User Registration
+- Email and password signup
+- Password confirmation validation
+- Success feedback and automatic redirect
+
+### ✅ User Login
+- Email and password authentication
+- Error handling with user-friendly messages
+- Automatic redirect to dashboard
+
+### ✅ Protected Routes
+- Dashboard requires authentication
+- Automatic redirect to login for unauthenticated users
+- Session persistence across page refreshes
+
+## Troubleshooting
+
+### "Invalid API key" error
+- Double-check that your environment variables are correct
+- Make sure you've restarted your dev server after updating `.env.local`
+- Verify you're using the **anon/public** key, not the service_role key
+
+### Email confirmation not working
+- Check your email spam folder
+- For development, disable email confirmation in Supabase settings
+- Verify your redirect URLs are configured correctly
+
+### Session not persisting
+- Check that middleware is properly configured
+- Clear your browser cookies and try again
+- Verify the Site URL in Supabase matches your development URL
+
+## Production Deployment
+
+When deploying to production:
+
+1. Add your production domain to **Authentication** → **URL Configuration**
+2. Add production environment variables to your hosting platform
+3. Re-enable email confirmations for security
+4. Consider setting up custom SMTP for email delivery
+5. Set up proper password policies in Supabase settings
+
